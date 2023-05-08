@@ -1,13 +1,18 @@
-ckage com.bo.upb.algoritmica1.model;
+package com.bo.upb.algoritmica1.model;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * TreeBinary
+ *
+ * @author Marcos Quispe
+ * @since 1.0
+ */
 public class TreeBinary {
 
     @Getter
@@ -138,9 +143,17 @@ public class TreeBinary {
         return size == cantNodosEsperados;
     }
 
+    /**
+     * Insertar heap, separar los valores por coma en insertar los elementos al árbol:
+     * @param values valor a  insertar
+     */
     public void insertarHeap(String values) {
-        // implement
+        String[] valuesArray = values.split(",");
+        for (String value : valuesArray) {
+            insertarHeap(Integer.parseInt(value.trim()));
+        }
     }
+
     /**
      * Metodo que va insertando los elementos de forma continua hasta llenar el nivel, para luego continuar con el siguiente nivel
      * Reubica el elemento insertado para que el arbol sea un árbol max-heap
@@ -322,6 +335,20 @@ public class TreeBinary {
         asignarPosiciones(root, 0);
     }
 
+    public int getHeight() {
+        return getHeight(root);
+    }
+
+    private int getHeight(Node node) {
+        if (node == null) {
+            return 0;
+        }
+        int leftHeight = getHeight(node.getLeft());
+        int rightHeight = getHeight(node.getRight());
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+
+
     private int asignarPosiciones(Node node, int index) {
         if (node == null) {
             return index;
@@ -330,6 +357,46 @@ public class TreeBinary {
         node.setPosition(index++);
         index = asignarPosiciones(node.getRight(), index);
         return index;
+    }
+
+    // Método para asignar las posiciones x e y de cada nodo
+    public void assignPositions() {
+        if (root == null) {
+            return;
+        }
+        assignPositions(root, 1, 1, 0);
+    }
+
+    // Método recursivo para asignar las posiciones x e y de cada nodo
+    private void assignPositions(Node node, int x, int y, int level) {
+        if (node == null) {
+            return;
+        }
+        node.setPosX(x);
+        node.setPosY(y);
+        int horizontalDistance = (int) Math.pow(2, (getHeight() - level - 1));
+        assignPositions(node.getLeft(), x - horizontalDistance, y + 1, level + 1);
+        assignPositions(node.getRight(), x + horizontalDistance, y + 1, level + 1);
+    }
+
+    public void printTree() {
+        if (root == null) {
+            System.out.println("Empty tree");
+            return;
+        }
+        printTree(root, 0);
+    }
+
+    private void printTree(Node node, int level) {
+        if (node == null) {
+            return;
+        }
+        printTree(node.getRight(), level + 1);
+        for (int i = 0; i < level; i++) {
+            System.out.print("\t");
+        }
+        System.out.println("(" + node.getPosX() + ", " + node.getPosY() + ")");
+        printTree(node.getLeft(), level + 1);
     }
 
 
@@ -343,21 +410,17 @@ public class TreeBinary {
         }
 
         tb.insertarHeap("10,20,30,40,50,60,70,80,90");
-        tb.insertarHeap(20);
-        tb.insertarHeap(10);
-        tb.insertarHeap(19);
-        tb.insertarHeap(9);
-        tb.insertarHeap(4);
-        tb.insertarHeap(16);
-        tb.insertarHeap(13);
-        tb.insertarHeap(8);
-        tb.insertarHeap(7);
-        tb.insertarHeap(3);
+
+
+        // Llamada al método assignPositions()
+        System.out.println("\n Arbol y Posiciones: ");
+        tb.assignPositions();
+        tb.printTree();
+
 
         System.out.println();
         tb.recorridoPorNiveles2();
         System.out.println("");
+    }}
 
-    }
 
-}
