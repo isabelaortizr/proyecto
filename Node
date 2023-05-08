@@ -8,6 +8,12 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Node
+ *
+ * @author Marcos Quispe
+ * @since 1.0
+ */
 @Getter @Setter
 @NoArgsConstructor
 @ToString
